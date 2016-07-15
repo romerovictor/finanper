@@ -1,0 +1,87 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,91,62)
+  Text = ("Cuentas")
+  Arrangement = Arrange.Vertical
+  { HBox1 HBox
+    MoveScaled(1,1,90,51)
+    Background = Color.DarkCyan
+    Expand = True
+    { Panel1 VBox
+      MoveScaled(1,1,40,49)
+      Background = Color.ButtonBackground
+      { GridView1 GridView
+        MoveScaled(1,1,37,46)
+        Expand = True
+        Mode = Select.Single
+        Header = GridView.Horizontal
+      }
+    }
+    { VBox1 VBox
+      MoveScaled(42,1,46,47)
+      Enabled = False
+      Background = Color.ButtonBackground
+      Expand = True
+      Margin = True
+      { Label1 Label
+        MoveScaled(2,2,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Saldo:")
+      }
+      { TextBox1 TextBox
+        MoveScaled(2,8,24,4)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+      }
+      { Label2 Label
+        MoveScaled(2,15,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Comentario:")
+      }
+      { TextArea1 TextArea
+        MoveScaled(2,21,16,16)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+        Wrap = True
+        ScrollBar = Scroll.Horizontal
+      }
+      { Label3 Label
+        MoveScaled(2,38,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Estado:")
+      }
+      { CheckBox1 CheckBox
+        MoveScaled(2,42,24,4)
+        Font = Font["Bold,+2"]
+        Text = ("Desconocido")
+      }
+    }
+  }
+  { HBox2 HBox
+    MoveScaled(1,54,90,8)
+    Background = Color.DarkGray
+    Invert = True
+    { btnCerrar Button
+      MoveScaled(63,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Cerrar")
+      Picture = Picture["icon:/large/close"]
+    }
+    { btnEditar Button
+      MoveScaled(46,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Editar")
+      Picture = Picture["icon:/large/edit"]
+    }
+    { btnNuevo Button
+      MoveScaled(26,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Nuevo")
+      Picture = Picture["icon:/large/add"]
+    }
+  }
+}

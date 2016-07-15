@@ -1,0 +1,145 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,80,73)
+  Text = ("GASTOS")
+  Arrangement = Arrange.Vertical
+  { Panel1 Panel
+    MoveScaled(0,0,80,7)
+    Background = Color.Gray
+    Arrangement = Arrange.Horizontal
+    Spacing = True
+    Margin = True
+    Padding = 10
+    { Label6 Label
+      MoveScaled(1,2,6,4)
+      Font = Font["Bold,+2"]
+      Text = ("Año:")
+    }
+    { cmbAnho ComboBox
+      MoveScaled(7,2,17,4)
+      List = [("Todos"), ("2016")]
+    }
+    { Label7 Label
+      MoveScaled(27,2,6,4)
+      Font = Font["Bold,+2"]
+      Text = ("Mes:")
+    }
+    { cmbMes ComboBox
+      MoveScaled(33,2,15,4)
+      Enabled = False
+      List = [("Todos")]
+    }
+    { Button1 Button
+      MoveScaled(54,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Filtrar")
+      Picture = Picture["icon:/large/filter"]
+    }
+  }
+  { VBox1 HBox
+    MoveScaled(2,8,71,55)
+    Expand = True
+    Spacing = True
+    Padding = 5
+    { ScrollView1 ScrollView
+      MoveScaled(0,0,34,44)
+      Arrangement = Arrange.Vertical
+      Margin = True
+      Padding = 5
+    }
+    { VBox2 VBox
+      MoveScaled(36,0,30,53)
+      Enabled = False
+      Expand = True
+      Spacing = True
+      Margin = True
+      { Label1 Label
+        MoveScaled(1,0,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Fecha:")
+      }
+      { txtFecha TextBox
+        MoveScaled(1,4,24,4)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+        Alignment = Align.Right
+      }
+      { Label2 Label
+        MoveScaled(1,8,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Monto:")
+      }
+      { txtMonto ValueBox
+        MoveScaled(1,12,24,4)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+      }
+      { Label3 Label
+        MoveScaled(1,16,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Categoria")
+      }
+      { cmbCategoria TextBox
+        MoveScaled(1,20,24,4)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+      }
+      { Label4 Label
+        MoveScaled(1,24,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Cuenta")
+      }
+      { cmbCuenta TextBox
+        MoveScaled(1,28,24,4)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+      }
+      { Label5 Label
+        MoveScaled(1,32,24,4)
+        Font = Font["Bold,+2"]
+        Foreground = Color.Black
+        Text = ("Comentario")
+      }
+      { txtComentario TextArea
+        MoveScaled(1,36,23,10)
+        Background = Color.TextBackground
+        Foreground = Color.Black
+        Wrap = True
+      }
+    }
+  }
+  { Frame1 HBox
+    MoveScaled(0,66,78,7)
+    Background = Color.Gray
+    Invert = True
+    { btnCerrar Button
+      MoveScaled(61,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Cerrar")
+      Picture = Picture["icon:/large/close"]
+    }
+    { btnEliminar Button
+      MoveScaled(45,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Eliminar")
+      Picture = Picture["icon:/large/erase"]
+    }
+    { btnEditar Button
+      MoveScaled(27,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Editar")
+      Picture = Picture["icon:/large/edit"]
+    }
+    { btnNuevo Button
+      MoveScaled(9,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Nuevo")
+      Picture = Picture["icon:/large/add"]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+' Gambas class file
+
+Private cn As Connection
+Private rs As Result
+Private edita As Boolean
+
+Public Sub btnSalir_Click()
+  Me.Close
+End
+
+Public Sub nuevo(conexion As Connection)
+  cn = conexion
+  edita = False
+  Me.ShowDialog
+End
+
+Public Sub editar(res As Result)
+edita = True
+rs = res
+txtPresupuesto.Value = rs!Presupuesto
+txtDescripcion.Text = rs!Descripcion
+Me.ShowDialog()
+End
+
+
+Public Sub btnGuardar_Click()
+  If edita = True Then
+    rs!Descripcion = txtDescripcion.Text
+    rs!Presupuesto = txtPresupuesto.Value
+    rs.Update
+    Me.Close
+  Else
+    rs = cn.Create("CategoriaIngreso")
+    rs!Descripcion = txtDescripcion.Text
+    rs!Presupuesto = txtPresupuesto.Value
+    rs.Update
+    Me.Close
+  Endif
+End

@@ -1,0 +1,75 @@
+' Gambas class file
+
+Private cn As New Connection
+Private rs As Result
+
+Public Sub Form_Open()
+formato
+cargar
+End
+
+Private Sub formato()
+GridView1.Columns.Count = 2
+With GridView1
+  .Columns[0].Title = "IdCuenta"
+  .Columns[1].Title = "Descripcion"
+End With
+End
+
+Private Sub cargar()
+If cn.Opened = False Then cn = modCon.conectar()
+rs = cn.Exec("Select * From Cuenta")
+If rs.Available Then
+  GridView1.Rows.Count = rs.Count
+Endif
+End
+
+
+Public Sub GridView1_Data(Row As Integer, Column As Integer)
+
+  rs.MoveTo(row)
+  GridView1.Data.Text = Str(rs[GridView1.Columns[Column].Text])
+
+End
+
+Public Sub GridView1_Click()
+If GridView1.Rows.Selection.Count = 0 Then
+  TextArea1.SetFocus
+Else
+  rs.MoveTo(CInt(GridView1[GridView1.Rows.Selection[0], 0].Text) - 1)
+  TextBox1.Text = rs!Saldo
+  TextArea1.Text = rs!Comentario
+  CheckBox1.Value = CBoolean(rs!Estado)
+  CheckBox1estado()
+Endif
+
+End
+
+Public Sub btnCerrar_Click()
+
+  Me.Close
+
+End
+
+Private Sub CheckBox1estado()
+  If CheckBox1.Value = True Then
+    CheckBox1.Text = "Activo"
+  Else
+    CheckBox1.Text = "Inactivo"
+  Endif
+End
+
+
+Public Sub btnNuevo_Click()
+  FeditaCuenta.nuevo(cn)
+  Form_Open()
+End
+
+Public Sub btnEditar_Click()
+Dim res As Result
+If GridView1.Rows.Selection.Count > 0 Then
+  res = cn.Edit("Cuenta", "IdCuenta=&1", GridView1[GridView1.Rows.Selection[0], 0].Text)
+  FeditaCuenta.editar(res)
+  Form_Open()
+Endif
+End

@@ -1,0 +1,49 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  Move(0,0,637,560)
+  #Scaled = False
+  Icon = Picture["icon:/medium/calculator"]
+  Resizable = False
+  { VBox1 VBox
+    Move(0,7,637,553)
+    Expand = True
+    { HBox1 HBox
+      Move(0,0,623,70)
+      Background = Color.LightForeground
+      { btnGasto Button
+        Move(0,7,105,56)
+        Text = ("Gastos")
+      }
+      { btnIngreso Button
+        Move(98,7,105,56)
+        Text = ("Ingresos")
+      }
+      { Button1 Button
+        Move(196,7,105,56)
+        Text = ("Deudas")
+      }
+      { btnDeuda Button
+        Move(294,7,105,56)
+        Text = ("Cuentas")
+      }
+      { btnCatGasto Button
+        Move(392,7,105,56)
+        Text = ("Categoria Gasto")
+      }
+      { btnCatIngreso Button
+        Move(504,7,105,56)
+        Text = ("Categoria Ingreso")
+      }
+    }
+    { HBox2 HBox
+      Move(14,98,574,420)
+      Expand = True
+      { Workspace1 Workspace
+        Move(7,7,560,406)
+        Expand = True
+        Border = False
+      }
+    }
+  }
+}

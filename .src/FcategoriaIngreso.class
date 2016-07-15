@@ -1,0 +1,65 @@
+' Gambas class file
+
+Private cn As New Connection
+Private rs As Result
+
+Public Sub Form_Open()
+formato
+cargar
+End
+
+Private Sub formato()
+GridView1.Columns.Count = 3
+With GridView1
+  .Columns[0].Title = "IdCatIngreso"
+  .Columns[0].Width = 100
+  .Columns[1].Title = "Descripcion"
+  .Columns[1].Width = 300
+  .Columns[2].Title = "Presupuesto"
+  .Columns[2].Alignment = Align.Right
+End With
+End
+
+Private Sub cargar()
+If cn.Opened = False Then cn = modCon.conectar()
+rs = cn.Exec("Select * From CategoriaIngreso")
+If rs.Available Then
+  GridView1.Rows.Count = rs.Count
+Endif
+End
+
+
+Public Sub GridView1_Data(Row As Integer, Column As Integer)
+
+  rs.MoveTo(row)
+  GridView1.Data.Text = Str(rs[GridView1.Columns[Column].Text])
+
+End
+
+Public Sub GridView1_Click()
+If GridView1.Rows.Selection.Count = 0 Then
+Else
+  rs.MoveTo(CInt(GridView1[GridView1.Rows.Selection[0], 0].Text) - 1)
+Endif
+
+End
+
+Public Sub btnCerrar_Click()
+
+  Me.Close
+
+End
+
+Public Sub btnNuevo_Click()
+  FeditaCategoriaIngreso.nuevo(cn)
+  Form_Open()
+End
+
+Public Sub btnEditar_Click()
+Dim res As Result
+If GridView1.Rows.Selection.Count > 0 Then
+  res = cn.Edit("CategoriaIngreso", "IdCatIngreso=&1", GridView1[GridView1.Rows.Selection[0], 0].Text)
+  FeditaCategoriaIngreso.editar(res)
+  Form_Open()
+Endif
+End

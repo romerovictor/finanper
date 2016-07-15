@@ -1,0 +1,28 @@
+' Gambas class file
+
+Public Sub Form_Open()
+
+End
+
+Public Sub btnDeuda_Click()
+
+  Workspace1.Add(fCuentas)
+End
+
+Public Sub btnCatGasto_Click()
+
+  Workspace1.Add(FcategoriaGasto)
+
+End
+
+Public Sub btnCatIngreso_Click()
+
+  Workspace1.Add(FcategoriaIngreso)
+
+End
+
+Public Sub btnGasto_Click()
+
+  Workspace1.Add(Fgasto)
+
+End

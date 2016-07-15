@@ -1,0 +1,22 @@
+' Gambas module file
+
+Private cn As New Connection
+
+Public Function conectar() As Connection
+If cn.Opened = True Then Return cn
+cn.Name = "finanza.sqlite"
+cn.Host = User.home & "/temporal"
+cn.Type = "Sqlite"
+Try cn.Open
+If Error Then
+  Message(Error.Text)
+  Return Null
+Else
+  Return cn
+Endif
+End
+
+Public Function desconectar() As Connection
+cn = Null
+Return cn
+End

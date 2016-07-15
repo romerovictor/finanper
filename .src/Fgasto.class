@@ -1,0 +1,208 @@
+' Gambas class file
+
+Private rs As Result '' variable que guarda el resultado de un a consulta a la tabla gasto agrupado por fecha
+Private res As Result ''variable que guarda el resultado de una consulta completa a la tabla gasto
+Private cn As New Connection
+Private Expan As Expander
+Private grid As GridView
+
+Private Sub formatogrid() ''Le da formato al grid
+    
+    With grid = New GridView(Expan) As "grilla" 'agrego un grid al Expander
+        .X = Expan.X + 15
+        .Y = Expan.Y + 15
+        .Columns.Count = 4
+        .Width = 300
+        .Mode = Select.Single
+        .Expand = True
+    End With
+    
+End
+
+Private Sub cargagrid() ''Carga cada grid que se crea
+    
+    Dim fec As String = Format(res!Fecha, "dd-mm-yyyy"), tex As String = Expan.Text
+    
+    If fec = tex Then ' si la fecha del 'res' es igual al texto del toolpanel
+        grid.Rows.Count += 1 'agrego una columna al grid y cargo los datos correspondientes
+        grid[grid.Rows.Count - 1, 0].Text = res!IdGasto
+        grid[grid.Rows.Count - 1, 1].Text = res!Monto
+        grid[grid.Rows.Count - 1, 2].Text = res!Categoria
+        grid[grid.Rows.Count - 1, 3].Text = res!Cuenta
+    Endif
+    
+End
+
+Private Sub cargar($anho As String, $mes As String) ''Cargo el toolpanel
+    
+    Dim anhoInicio As String = CStr($anho & "-01-01"), anhoFin As String = CStr($anho & "-12-31")
+    Dim mesInicio As String = CStr($anho & "-" & $mes & "-01"), mesFin As String = CStr($anho & "-" & $mes & "-31")
+    
+    If Not cn.Opened Then cn = modCon.conectar()
+    cargarAnho()
+    If $anho = "Todos" Then
+        rs = cn.Exec("select Fecha from Gasto group by Fecha")
+        res = cn.Exec("select Gasto.IdGasto, Gasto.Fecha,Gasto.Monto,Gasto.Comentario,CategoriaGasto.Descripcion as 'Categoria',Cuenta.Descripcion as 'Cuenta' from Gasto,CategoriaGasto,Cuenta where CategoriaGasto.IdCatGasto=Gasto.IdCatGasto and Cuenta.IdCuenta=Gasto.IdCuenta")
+    Else
+        If $mes = "Todos" Then
+            rs = cn.Exec("select Fecha from Gasto where fecha between &1 and &2 group by Fecha", anhoInicio, anhoFin)
+            res = cn.Exec("select Gasto.IdGasto, Gasto.Fecha,Gasto.Monto,Gasto.Comentario,CategoriaGasto.Descripcion as 'Categoria',Cuenta.Descripcion as 'Cuenta' from Gasto,CategoriaGasto,Cuenta where CategoriaGasto.IdCatGasto=Gasto.IdCatGasto and Cuenta.IdCuenta=Gasto.IdCuenta and Gasto.Fecha between &1 and &2", anhoInicio, anhoFin)
+        Else
+            rs = cn.Exec("select Fecha from Gasto where fecha between &1 and &2 group by Fecha", mesInicio, mesFin)
+            res = cn.Exec("select Gasto.IdGasto, Gasto.Fecha,Gasto.Monto,Gasto.Comentario,CategoriaGasto.Descripcion as 'Categoria',Cuenta.Descripcion as 'Cuenta' from Gasto,CategoriaGasto,Cuenta where CategoriaGasto.IdCatGasto=Gasto.IdCatGasto and Cuenta.IdCuenta=Gasto.IdCuenta and Gasto.Fecha between &1 and &2", mesInicio, mesFin)
+        Endif
+    Endif
+    ScrollView1.Refresh
+    For Each rs 'por cada resultado
+        With Expan = New Expander(ScrollView1)
+            .Text = Format(rs!Fecha, "dd-mm-yyyy") 'el texto del panel es la fecha del resultado correspondiente
+        End With
+        formatogrid() 'le doy formato al grid
+        For Each res 'por cada resultado de 'res'
+            cargagrid() 'cargo el grid
+        Next
+        grid.Height += (grid.Rows.Height * grid.Rows.Count) + grid.Rows.Height / 2 'defino el tamaño del grid dependiendo de cuantas filas tenga
+        Expan.Height += grid.Height 'defino el tamaño del expande dependiendo del tamaño del grid
+        Expan.Text = Expan.Text & "---" & grid.Rows.Count & " Transaciones"
+    Next
+    
+End
+
+Public Sub Form_Open()
+    
+    limpiar()
+    cargar("Todos", "Todos")
+    
+End
+
+Public Sub grilla_Click()
+    
+    grid = Last
+    If Last.Rows.Selection.Count > 0 Then
+        Print res.Count
+        res.MoveFirst
+        While res.Available
+            If grid[grid.Rows.Selection[0], 0].Text = res!IdGasto Then
+                txtFecha.Text = res!Fecha
+                txtMonto.Text = res!Monto
+                cmbCategoria.Text = res!Categoria
+                cmbCuenta.Text = res!Cuenta
+                txtComentario.Text = res!Comentario
+                Break
+            Endif
+            res.MoveNext
+        Wend
+    Endif
+    
+End
+
+Public Sub btnCerrar_Click()
+    
+    Me.Close()
+    
+End
+
+Private Procedure limpiar()
+    
+    Dim tipo As Control
+    
+    For Each tipo In Me.Controls
+        If tipo Is Expander Then
+            tipo.Delete
+        Endif
+    Next
+    
+End
+
+Public Sub btnEliminar_Click()
+    
+    If grid.Rows.Selection.Count > 0 Then
+        If Message.Delete("Desea eliminar el registro " & grid[grid.Rows.Selection[0], 0].Text, "Si", "No") = 1 Then
+            cn.Begin
+            Try cn.Delete("Gasto", "IdGasto=&1", grid[grid.Rows.Selection[0], 0].Text)
+            If Error Then
+                Print Error.Text
+                cn.Rollback
+            Else
+                cn.Commit
+                Form_Open()
+            Endif
+        Endif
+    Endif
+    
+End
+
+Public Sub btnNuevo_Click()
+    
+    FeditaGasto.nuevo()
+    Form_Open()
+    
+End
+
+Public Sub btnEditar_Click()
+    
+    Dim resu As Result
+    
+    If grid.Rows.Selection.Count > 0 Then
+        resu = cn.Exec("select Gasto.IdGasto, Gasto.Fecha,Gasto.Monto,Gasto.Comentario,CategoriaGasto.Descripcion as 'Categoria',Cuenta.Descripcion as 'Cuenta' from Gasto,CategoriaGasto,Cuenta where IdGasto=&1 And CategoriaGasto.IdCatGasto=Gasto.IdCatGasto and Cuenta.IdCuenta=Gasto.IdCuenta", grid[grid.Rows.Selection[0], 0].Text)
+        FeditaGasto.editar(resu)
+        Form_Open()
+    Endif
+    
+End
+
+Public Sub cmbAnho_Change()
+    
+    If cmbAnho.Text = "Todos" Then 
+        cmbMes.Enabled = False
+    Else
+        cmbMes.Enabled = True
+        cargarMes(cmbAnho.Text)
+        
+    Endif
+    
+End
+
+Public Sub Button1_Click()
+    
+    If cmbAnho.Text = "Todos" Or cmbAnho.Text = Null Then
+        limpiar()
+        cargar("Todos", "Todos")
+    Else
+        If cmbMes.Text = "Todos" Or cmbMes.Text = Null Then
+            limpiar()
+            cargar(cmbAnho.Text, "Todos")
+        Else
+            limpiar()
+            cargar(cmbAnho.Text, cmbMes.Text)
+        Endif
+    Endif
+    
+End
+
+Private Procedure cargarAnho()
+    
+    Dim $rs As Result
+
+    If Not cn.Opened Then cn = modCon.conectar()
+    $rs = cn.Exec("Select Fecha from Gasto group by Fecha")
+    For Each $rs
+        If Not cmbAnho.List.Exist(Format($rs!Fecha, "yyyy")) Then cmbAnho.Add(Format($rs!Fecha, "yyyy"))
+    Next
+    
+End
+
+Private Procedure cargarMes($anho As String)
+
+    Dim $rs As Result
+    cmbMes.Clear
+    cmbMes.Add("Todos")
+    If Not cn.Opened Then cn = modCon.conectar()
+    $rs = cn.Exec("Select Fecha from Gasto group by Fecha")
+    For Each $rs
+        If Format($rs!Fecha, "yyyy") = $anho Then
+            If Not cmbMes.List.Exist(Format($rs!Fecha, "mm")) Then cmbMes.Add(Format($rs!Fecha, "mm"))
+        Endif
+    Next
+    
+End

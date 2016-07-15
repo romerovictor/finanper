@@ -1,0 +1,42 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,54,30)
+  Resizable = False
+  { HPanel1 VBox
+    MoveScaled(0,0,54,22)
+    Expand = True
+    Margin = True
+    { Label1 Label
+      MoveScaled(1,1,24,4)
+      Text = ("Descripcion")
+    }
+    { txtDescripcion TextBox
+      MoveScaled(1,6,51,4)
+    }
+    { Label2 Label
+      MoveScaled(1,11,24,4)
+      Text = ("Presupuesto")
+    }
+    { txtPresupuesto ValueBox
+      MoveScaled(1,16,24,4)
+    }
+  }
+  { HBox1 HBox
+    MoveScaled(0,22,54,8)
+    Background = Color.DarkGray
+    Invert = True
+    { btnSalir Button
+      MoveScaled(36,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Salir")
+      Picture = Picture["icon:/large/close"]
+    }
+    { btnGuardar Button
+      MoveScaled(17,2,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Guardar")
+      Picture = Picture["icon:/large/save"]
+    }
+  }
+}

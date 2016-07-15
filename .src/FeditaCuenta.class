@@ -1,0 +1,59 @@
+' Gambas class file
+
+' Rambas class files
+
+Private cn As Connection
+Private rs As Result
+Private edita As Boolean
+
+
+Private Sub estadoCheckbox()
+If chbEstado.Value = True Then
+  chbEstado.Text = "Activo"
+Else
+  chbEstado.Text = "Inactivo"
+Endif
+End
+
+Public Sub chbEstado_Click()
+  estadoCheckbox()
+End
+
+Public Sub btnSalir_Click()
+  Me.Close
+End
+
+Public Sub nuevo(conexion As Connection)
+  cn = conexion
+'   cn.Begin
+  chbEstado.Value = True
+  edita = False
+  Me.ShowDialog
+End
+
+Public Sub editar(res As Result)
+edita = True
+rs = res
+txtComentario.Text = rs!Comentario
+txtDescripcion.Text = rs!Descripcion
+chbEstado.Value = rs!Estado
+Me.ShowDialog()
+End
+
+
+Public Sub btnGuardar_Click()
+  If edita = True Then
+    rs!Descripcion = txtDescripcion.Text
+    rs!Comentario = txtComentario.Text
+    rs!Estado = Abs(chbEstado.Value)
+    rs.Update
+    Me.Close
+  Else
+    rs = cn.Create("Cuenta")
+    rs!Descripcion = txtDescripcion.Text
+    rs!Comentario = txtComentario.Text
+    rs!Estado = Abs(chbEstado.Value)
+    rs.Update
+    Me.Close
+  Endif
+End

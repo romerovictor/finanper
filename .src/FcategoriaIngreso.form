@@ -1,0 +1,48 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,84,62)
+  Text = ("Categoria Ingresos")
+  Resizable = False
+  Arrangement = Arrange.Vertical
+  { HBox1 HBox
+    MoveScaled(1,1,83,51)
+    Background = Color.DarkCyan
+    Expand = True
+    { Panel1 VBox
+      MoveScaled(1,1,40,49)
+      Background = Color.ButtonBackground
+      Expand = True
+      { GridView1 GridView
+        MoveScaled(1,1,37,46)
+        Expand = True
+        Mode = Select.Single
+        Padding = 5
+        Header = GridView.Horizontal
+      }
+    }
+  }
+  { HBox2 HBox
+    MoveScaled(1,54,83,8)
+    Background = Color.DarkGray
+    Invert = True
+    { btnCerrar Button
+      MoveScaled(63,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Cerrar")
+      Picture = Picture["icon:/large/close"]
+    }
+    { btnEditar Button
+      MoveScaled(46,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Editar")
+      Picture = Picture["icon:/large/edit"]
+    }
+    { btnNuevo Button
+      MoveScaled(26,3,16,4)
+      Font = Font["Bold,+2"]
+      Text = ("Nuevo")
+      Picture = Picture["icon:/large/add"]
+    }
+  }
+}

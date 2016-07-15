@@ -1,0 +1,109 @@
+' Gambas class file
+
+Private cn As Connection
+Private rs As Result
+Private edita As Boolean
+Private resCat As Result
+Private resCuenta As Result
+
+Private Sub cargaCombos()
+  
+  If cn = Null Then cn = modCon.conectar()
+  resCat = cn.Exec("select * from CategoriaGasto")
+  resCuenta = cn.Exec("select IdCuenta, Descripcion from Cuenta where Estado =1")
+  For Each resCat
+    cmbCategoria.Add(resCat!Descripcion)
+  Next
+  For Each resCuenta
+    cmbCuenta.Add(resCuenta!Descripcion)
+  Next
+  
+End
+
+Public Procedure nuevo()
+  
+  If cn = Null Then cn = modCon.conectar()
+  edita = False
+  cargaCombos()
+  Me.ShowDialog
+  
+End
+
+Public Procedure editar(res As Result)
+  
+  cargaCombos()
+  rs = res
+  txtFecha.Value = rs!Fecha
+  txtMonto.Value = CInt(rs!Monto)
+  txtComentario.Text = rs!Comentario
+  cmbCategoria.Text = rs!Categoria
+  cmbCuenta.Text = rs!Cuenta
+  edita = True
+  Me.ShowDialog
+  
+End
+
+Public Sub Form_Open()
+  
+End
+
+Public Sub cmbCategoria_Change()
+  
+  resCat.MoveTo(cmbCategoria.Index)
+  IdCat.Text = (resCat!IdCatGasto)
+  
+End
+
+Public Sub btnCerrar_Click()
+  
+  Me.Close
+  
+End
+
+Public Sub btnGuardar_Click()
+  Dim resedit As Result
+  If cn = Null Then cn = modCon.conectar
+  If edita = True Then
+     cn.Begin()
+    Try resedit = cn.Edit("Gasto", "IdGasto=&1", rs!IdGasto)
+    Try resedit!Fecha = txtFecha.Value
+    Try resedit!Monto = txtMonto.Value
+    Try resedit!IdCatGasto = IdCat.Text
+    Try resedit!IdCuenta = IdCue.Text
+    Try resedit!Comentario = txtComentario.Text
+    Try resedit.Update()
+    If Error Then 
+      Message(Error.Text)
+      cn.Rollback
+    Else
+      Message("Datos Guardados")
+      cn.Commit
+      Me.Close
+    Endif
+  Else
+    cn.Begin
+    Try rs = cn.Create("Gasto")
+    Try rs!Fecha = txtFecha.Value
+    Try rs!Monto = txtMonto.Value
+    Try rs!IdCatGasto = IdCat.Text
+    Try rs!IdCuenta = IdCue.Text
+    Try rs!Comentario = txtComentario.Text
+    Try rs.Update
+    If Error Then
+      Message(Error.Text)
+      cn.Rollback
+    Else
+      Message("Datos Guardados")
+      cn.Commit
+      Me.Close
+    Endif
+  Endif
+  
+End
+
+Public Sub cmbCuenta_Change()
+
+  resCuenta.MoveTo(cmbCuenta.Index)
+  IdCue.Text = resCuenta!IdCuenta
+
+End
